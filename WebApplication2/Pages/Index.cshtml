@@ -1,0 +1,90 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+@if (TempData["Over16"] != null && (bool)TempData["Over16"])
+{
+    <h2>Order</h2>
+    <form method="post" asp-page="Order">
+        <div class="form-group">
+            <label>Enter the quantity for each product:</label>
+            @for (var i = 0; i < Model.Products.Count; i++)
+            {
+                <div class="form-group">
+                    <label asp-for="@Model.Products[i].Quantity">Quantity for @Model.Products[i].Name:</label>
+                    <input asp-for="@Model.Products[i].Quantity" class="form-control" />
+                </div>
+            }
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+}
+else
+{
+    <h2>Registration</h2>
+    <form method="post">
+        <div class="form-group">
+            <label asp-for="User.Name">Name:</label>
+            <input asp-for="User.Name" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label asp-for="User.Age">Age:</label>
+            <input asp-for="User.Age" class="form-control" />
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+}
+
+
+<!-- Order form -->
+@if (Model.User != null && Model.User.Age > 16)
+{
+    <div class="container">
+        <h2>Order</h2>
+        <form method="post">
+            @for (var i = 0; i < Model.Products.Count; i++)
+            {
+                <div class="form-group">
+                    <label asp-for="Products[i].Quantity">Quantity for @Model.Products[i].Name:</label>
+                    <input asp-for="Products[i].Quantity" class="form-control" />
+                </div>
+            }
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+}
+
+<!-- Order summary -->
+@if (Model.Products != null && Model.Products.Any(p => p.Quantity > 0))
+{
+    <div class="container">
+        <h2>Order Summary</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var product in Model.Products)
+                {
+                    if (product.Quantity > 0)
+                    {
+                        <tr>
+                            <td>@product.Name</td>
+                            <td>@product.Quantity</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
